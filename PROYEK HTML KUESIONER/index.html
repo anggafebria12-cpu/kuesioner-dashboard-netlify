@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kuesioner Penelitian MIF – Awak Kapal Niaga</title>
+<style>
+  :root {
+    --navy: #0D2B4E;
+    --blue: #1A6FB5;
+    --blue-light: #E8F3FC;
+    --teal: #0E7C6B;
+    --teal-light: #E4F5F2;
+    --amber: #C47A1B;
+    --amber-light: #FEF4E2;
+    --red: #B83232;
+    --red-light: #FDECEC;
+    --gray-100: #F7F8FA;
+    --gray-200: #ECEEF2;
+    --gray-400: #9CA3AF;
+    --gray-600: #5A6473;
+    --gray-800: #2D3748;
+    --text: #1A2333;
+    --border: #DCE1E9;
+    --white: #FFFFFF;
+    --radius: 10px;
+    --radius-sm: 6px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    font-size: 15px;
+    color: var(--text);
+    background: var(--gray-100);
+    line-height: 1.6;
+  }
+  .header {
+    background: linear-gradient(135deg, var(--navy) 0%, #1A4A80 100%);
+    color: white;
+    padding: 2rem 1rem 1.5rem;
+    text-align: center;
+  }
+  .header-inner { max-width: 680px; margin: 0 auto; }
+  .header-badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.3);
+    color: #B8D9F5;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 20px;
+    margin-bottom: 0.75rem;
+  }
+  .header h1 { font-size: 22px; font-weight: 700; margin-bottom: 0.5rem; }
+  .header p { font-size: 13px; opacity: 0.8; max-width: 520px; margin: 0 auto; }
+  .progress-wrap {
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+    padding: 0.75rem 1rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .progress-inner { max-width: 680px; margin: 0 auto; }
+  .progress-steps { display: flex; gap: 0; align-items: center; }
+  .step-item { display: flex; align-items: center; flex: 1; }
+  .step-dot {
+    width: 28px; height: 28px; border-radius: 50%;
+    border: 2px solid var(--border);
+    background: var(--white);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 600; color: var(--gray-400);
+    flex-shrink: 0; transition: all 0.3s;
+  }
+  .step-dot.active { border-color: var(--blue); background: var(--blue); color: white; }
+  .step-dot.done { border-color: var(--teal); background: var(--teal); color: white; }
+  .step-line { flex: 1; height: 2px; background: var(--border); margin: 0 4px; transition: background 0.3s; }
+  .step-line.done { background: var(--teal); }
+  .step-label { font-size: 10px; color: var(--gray-400); margin-top: 3px; text-align: center; display: none; }
+  .progress-text { font-size: 12px; color: var(--gray-600); margin-top: 6px; display: flex; justify-content: space-between; }
+  .page { display: none; max-width: 680px; margin: 0 auto; padding: 1.5rem 1rem 4rem; }
+  .page.active { display: block; }
+  .section-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-bottom: 1rem;
+  }
+  .section-head {
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .section-icon {
+    width: 36px; height: 36px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; flex-shrink: 0;
+  }
+  .icon-blue { background: var(--blue-light); }
+  .icon-teal { background: var(--teal-light); }
+  .icon-amber { background: var(--amber-light); }
+  .section-title { font-size: 15px; font-weight: 600; color: var(--navy); }
+  .section-sub { font-size: 12px; color: var(--gray-600); margin-top: 1px; }
+  .section-body { padding: 1.25rem; }
+  .field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .field-full { grid-column: 1/-1; }
+  .field { margin-bottom: 0; }
+  .field label { font-size: 13px; font-weight: 500; color: var(--gray-800); display: block; margin-bottom: 5px; }
+  .field input, .field select, .field textarea {
+    width: 100%; padding: 9px 12px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-size: 14px; color: var(--text);
+    font-family: inherit;
+    background: var(--white);
+    transition: border-color 0.2s;
+    -webkit-appearance: none;
+  }
+  .field input:focus, .field select:focus { outline: none; border-color: var(--blue); }
+  .field select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%235A6473' d='M1 1l5 5 5-5'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 32px; }
+  .instr-box {
+    background: var(--blue-light);
+    border: 1px solid #C2DCF5;
+    border-radius: var(--radius-sm);
+    padding: 10px 14px;
+    font-size: 12px;
+    color: #1A4A80;
+    margin-bottom: 1.25rem;
+    line-height: 1.7;
+  }
+  .q-row {
+    padding: 12px 0;
+    border-bottom: 1px solid var(--gray-200);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .q-row:last-child { border-bottom: none; }
+  .q-num { font-size: 11px; font-weight: 700; color: var(--blue); letter-spacing: 0.5px; }
+  .q-text { font-size: 14px; color: var(--text); line-height: 1.5; }
+  .q-options { display: flex; gap: 6px; flex-wrap: wrap; }
+  .opt-btn {
+    min-width: 44px; padding: 7px 12px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--white);
+    font-size: 13px; color: var(--gray-600);
+    cursor: pointer; transition: all 0.15s;
+    font-family: inherit; font-weight: 500;
+    text-align: center;
+  }
+  .opt-btn:hover { border-color: var(--blue); color: var(--blue); background: var(--blue-light); }
+  .opt-btn.selected { border-color: var(--blue); background: var(--blue); color: white; }
+  .opt-label { font-size: 11px; color: var(--gray-400); margin-top: 2px; }
+  .sofi-dim-head {
+    font-size: 12px; font-weight: 700;
+    color: var(--teal); text-transform: uppercase;
+    letter-spacing: 0.8px; padding: 10px 0 4px;
+    margin-top: 4px;
+  }
+  .nasa-row { margin-bottom: 1.25rem; }
+  .nasa-label-row { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 4px; }
+  .nasa-dim { font-size: 14px; font-weight: 600; color: var(--navy); }
+  .nasa-val-badge {
+    font-size: 14px; font-weight: 700; color: var(--blue);
+    background: var(--blue-light); padding: 2px 10px;
+    border-radius: 20px; min-width: 48px; text-align: center;
+  }
+  .nasa-desc { font-size: 12px; color: var(--gray-600); margin-bottom: 8px; }
+  .nasa-scale-labels { display: flex; justify-content: space-between; font-size: 10px; color: var(--gray-400); margin-top: 3px; }
+  input[type=range] {
+    width: 100%; height: 6px; cursor: pointer;
+    accent-color: var(--blue);
+  }
+  .nav-bar {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 1rem;
+    background: var(--white);
+    border-top: 1px solid var(--border);
+    position: fixed; bottom: 0; left: 0; right: 0;
+    z-index: 100;
+  }
+  .btn {
+    padding: 10px 22px;
+    border-radius: var(--radius-sm);
+    font-size: 14px; font-weight: 600;
+    cursor: pointer; font-family: inherit;
+    transition: all 0.15s;
+    border: 1.5px solid var(--border);
+    background: var(--white); color: var(--gray-600);
+  }
+  .btn:hover { background: var(--gray-100); }
+  .btn-primary {
+    background: var(--blue); color: white; border-color: var(--blue);
+  }
+  .btn-primary:hover { background: #155E9E; }
+  .btn-success {
+    background: var(--teal); color: white; border-color: var(--teal);
+  }
+  .consent-box {
+    background: var(--white); border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.25rem; margin-top: 1rem;
+    display: flex; gap: 12px; align-items: flex-start;
+  }
+  .consent-box input[type=checkbox] {
+    width: 20px; height: 20px; flex-shrink: 0;
+    cursor: pointer; margin-top: 2px; accent-color: var(--blue);
+  }
+  .consent-text { font-size: 13px; color: var(--gray-600); line-height: 1.7; }
+  .done-page { text-align: center; padding: 3rem 1rem; }
+  .done-icon { font-size: 64px; margin-bottom: 1rem; }
+  .done-title { font-size: 24px; font-weight: 700; color: var(--navy); margin-bottom: 0.5rem; }
+  .done-sub { font-size: 15px; color: var(--gray-600); margin-bottom: 2rem; max-width: 400px; margin-left: auto; margin-right: auto; }
+  .score-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; max-width: 420px; margin: 0 auto 2rem; }
+  .score-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem; }
+  .score-val { font-size: 26px; font-weight: 700; }
+  .score-lbl { font-size: 11px; color: var(--gray-600); margin-top: 2px; }
+  .score-status { font-size: 11px; font-weight: 600; margin-top: 4px; }
+  .status-ok { color: var(--teal); }
+  .status-warn { color: var(--amber); }
+  .status-bad { color: var(--red); }
+  .info-strip {
+    background: var(--teal-light); border: 1px solid #B0DDD8;
+    border-radius: var(--radius-sm); padding: 10px 14px;
+    font-size: 12px; color: #0A5C4E; margin-bottom: 1rem;
+  }
+  .required::after { content: ' *'; color: var(--red); }
+  .validation-msg { font-size: 11px; color: var(--red); margin-top: 4px; display: none; }
+  .field.error input, .field.error select { border-color: var(--red); }
+  .field.error .validation-msg { display: block; }
+  @media (max-width: 480px) {
+    .field-grid { grid-template-columns: 1fr; }
+    .score-grid { grid-template-columns: 1fr 1fr; }
+    .header h1 { font-size: 18px; }
+    .opt-btn { padding: 7px 8px; font-size: 12px; min-width: 38px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div class="header-badge">Penelitian D4 Nautika · Polimarin</div>
+    <h1>Kuesioner Motion-Induced Fatigue (MIF)</h1>
+    <p>Pengaruh Stabilitas Dinamis Kapal terhadap Kelelahan Awak Kapal Niaga Domestik</p>
+  </div>
+</div>
+
+<div class="progress-wrap">
+  <div class="progress-inner">
+    <div class="progress-steps" id="stepBar">
+      <div class="step-item">
+        <div class="step-dot active" id="dot1">1</div>
+        <div class="step-line" id="line1"></div>
+      </div>
+      <div class="step-item">
+        <div class="step-dot" id="dot2">2</div>
+        <div class="step-line" id="line2"></div>
+      </div>
+      <div class="step-item">
+        <div class="step-dot" id="dot3">3</div>
+        <div class="step-line" id="line3"></div>
+      </div>
+      <div class="step-item">
+        <div class="step-dot" id="dot4">4</div>
+        <div class="step-line" id="line4"></div>
+      </div>
+      <div class="step-item">
+        <div class="step-dot" id="dot5">✓</div>
+      </div>
+    </div>
+    <div class="progress-text">
+      <span id="stepLabel">Langkah 1 dari 4: Persetujuan & Data Diri</span>
+      <span id="stepPct">0%</span>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE 1: CONSENT + DEMOGRAFI -->
+<div class="page active" id="page1">
+  <div class="section-card">
+    <div class="section-head">
+      <div class="section-icon icon-blue">📋</div>
+      <div>
+        <div class="section-title">Informasi Penelitian & Persetujuan</div>
+        <div class="section-sub">Baca sebelum mengisi kuesioner</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="instr-box">
+        Penelitian ini bertujuan mengkaji hubungan antara gerakan kapal (roll, pitch, heave) dengan tingkat kelelahan awak kapal niaga. Data Anda bersifat <strong>anonim dan rahasia</strong>, digunakan hanya untuk keperluan akademis. Partisipasi bersifat sukarela dan dapat dihentikan kapan saja. Estimasi waktu: <strong>15–20 menit</strong>.
+        <br><br>
+        Peneliti: Mahasiswa D4 Nautika Polimarin Semarang · Kontak: <em>[nomor peneliti]</em>
+      </div>
+      <div class="consent-box">
+        <input type="checkbox" id="consent">
+        <label for="consent" class="consent-text">
+          Saya telah membaca dan memahami informasi di atas. Saya <strong>bersedia berpartisipasi secara sukarela</strong> dan setuju data anonim saya digunakan untuk penelitian ini.
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-card" id="demog-card" style="opacity:0.4;pointer-events:none">
+    <div class="section-head">
+      <div class="section-icon icon-blue">👤</div>
+      <div>
+        <div class="section-title">Data Demografis</div>
+        <div class="section-sub">Identitas tidak dicantumkan dalam laporan</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="field-grid">
+        <div class="field">
+          <label class="required">Jabatan di Kapal</label>
+          <select id="d-jabatan">
+            <option value="">— Pilih jabatan —</option>
+            <option>Nakhoda / Kapten</option>
+            <option>Mualim I (Chief Officer)</option>
+            <option>Mualim II (2nd Officer)</option>
+            <option>Mualim III (3rd Officer)</option>
+            <option>AB / Juru Mudi</option>
+            <option>OS (Ordinary Seaman)</option>
+            <option>KKM (Chief Engineer)</option>
+            <option>Masinis I / II / III</option>
+            <option>Lainnya</option>
+          </select>
+          <div class="validation-msg">Pilih jabatan Anda</div>
+        </div>
+        <div class="field">
+          <label class="required">Pengalaman Berlayar</label>
+          <select id="d-exp">
+            <option value="">— Pilih —</option>
+            <option>6 bulan – 1 tahun</option>
+            <option>1 – 3 tahun</option>
+            <option>3 – 5 tahun</option>
+            <option>5 – 10 tahun</option>
+            <option>Lebih dari 10 tahun</option>
+          </select>
+          <div class="validation-msg">Pilih pengalaman Anda</div>
+        </div>
+        <div class="field">
+          <label class="required">Usia</label>
+          <select id="d-usia">
+            <option value="">— Pilih —</option>
+            <option>18 – 24 tahun</option>
+            <option>25 – 30 tahun</option>
+            <option>31 – 40 tahun</option>
+            <option>41 – 50 tahun</option>
+            <option>Lebih dari 50 tahun</option>
+          </select>
+          <div class="validation-msg">Pilih usia Anda</div>
+        </div>
+        <div class="field">
+          <label class="required">Jenis Kapal Terakhir</label>
+          <select id="d-kapal">
+            <option value="">— Pilih —</option>
+            <option>General Cargo</option>
+            <option>Container Feeder</option>
+            <option>Bulk Carrier</option>
+            <option>Tanker</option>
+            <option>Ro-Ro</option>
+            <option>Kapal Penumpang</option>
+            <option>Lainnya</option>
+          </select>
+          <div class="validation-msg">Pilih jenis kapal</div>
+        </div>
+        <div class="field">
+          <label class="required">Rute Pelayaran Terakhir</label>
+          <select id="d-rute">
+            <option value="">— Pilih rute —</option>
+            <option>Semarang – Surabaya (Laut Jawa)</option>
+            <option>Semarang – Jakarta</option>
+            <option>Semarang – Kalimantan</option>
+            <option>Surabaya – Kalimantan</option>
+            <option>Selat Karimata</option>
+            <option>Laut Banda / Sulawesi</option>
+            <option>Lainnya (domestik)</option>
+          </select>
+          <div class="validation-msg">Pilih rute terakhir</div>
+        </div>
+        <div class="field">
+          <label class="required">Durasi Pelayaran Terakhir</label>
+          <select id="d-durasi">
+            <option value="">— Pilih —</option>
+            <option>Kurang dari 12 jam</option>
+            <option>12 – 24 jam</option>
+            <option>1 – 3 hari</option>
+            <option>3 – 7 hari</option>
+            <option>Lebih dari 7 hari</option>
+          </select>
+          <div class="validation-msg">Pilih durasi</div>
+        </div>
+        <div class="field">
+          <label class="required">Kondisi Cuaca / Gelombang Dialami</label>
+          <select id="d-cuaca">
+            <option value="">— Pilih —</option>
+            <option>Sangat tenang (Hs &lt; 0.5 m)</option>
+            <option>Tenang (Hs 0.5 – 1.0 m)</option>
+            <option>Sedang (Hs 1.0 – 2.0 m)</option>
+            <option>Berombak (Hs 2.0 – 3.0 m)</option>
+            <option>Kasar (Hs &gt; 3.0 m)</option>
+          </select>
+          <div class="validation-msg">Pilih kondisi cuaca</div>
+        </div>
+        <div class="field">
+          <label class="required">Jadwal Giliran Jaga (Watch Schedule)</label>
+          <select id="d-jaga">
+            <option value="">— Pilih —</option>
+            <option>00.00 – 04.00 / 12.00 – 16.00</option>
+            <option>04.00 – 08.00 / 16.00 – 20.00</option>
+            <option>08.00 – 12.00 / 20.00 – 24.00</option>
+            <option>Tidak bertugas jaga</option>
+          </select>
+          <div class="validation-msg">Pilih jadwal jaga</div>
+        </div>
+        <div class="field field-full">
+          <label>Jam Istirahat dalam 24 Jam Terakhir (jam)</label>
+          <select id="d-istirahat">
+            <option value="">— Pilih —</option>
+            <option>Kurang dari 6 jam (di bawah standar STCW)</option>
+            <option>6 – 8 jam</option>
+            <option>8 – 10 jam (standar minimum STCW)</option>
+            <option>Lebih dari 10 jam</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE 2: ESS -->
+<div class="page" id="page2">
+  <div class="section-card">
+    <div class="section-head">
+      <div class="section-icon icon-blue">😴</div>
+      <div>
+        <div class="section-title">Epworth Sleepiness Scale (ESS)</div>
+        <div class="section-sub">Seksi A dari 3 · 8 pertanyaan</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="instr-box">
+        Seberapa besar kemungkinan Anda akan <strong>mengantuk atau tertidur</strong> dalam situasi berikut, meskipun Anda sudah beristirahat? Pilih angka yang paling sesuai:
+        <br><br>
+        <strong>0</strong> = Tidak pernah mengantuk &nbsp;·&nbsp;
+        <strong>1</strong> = Kemungkinan kecil &nbsp;·&nbsp;
+        <strong>2</strong> = Kemungkinan sedang &nbsp;·&nbsp;
+        <strong>3</strong> = Kemungkinan sangat besar
+      </div>
+      <div id="ess-container"></div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE 3: SOFI -->
+<div class="page" id="page3">
+  <div class="section-card">
+    <div class="section-head">
+      <div class="section-icon icon-teal">⚡</div>
+      <div>
+        <div class="section-title">Swedish Occupational Fatigue Inventory (SOFI)</div>
+        <div class="section-sub">Seksi B dari 3 · 20 pertanyaan · 5 dimensi</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="instr-box">
+        Seberapa tepat pernyataan berikut menggambarkan kondisi Anda <strong>saat ini, setelah menyelesaikan giliran jaga terakhir?</strong>
+        <br><br>
+        <strong>0</strong> = Tidak sama sekali &nbsp;·&nbsp;
+        <strong>1</strong> = Sedikit &nbsp;·&nbsp;
+        <strong>2</strong> = Cukup &nbsp;·&nbsp;
+        <strong>3</strong> = Sangat &nbsp;·&nbsp;
+        <strong>4</strong> = Amat sangat
+      </div>
+      <div id="sofi-container"></div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE 4: NASA-TLX -->
+<div class="page" id="page4">
+  <div class="section-card">
+    <div class="section-head">
+      <div class="section-icon icon-amber">🧠</div>
+      <div>
+        <div class="section-title">NASA Task Load Index (NASA-TLX)</div>
+        <div class="section-sub">Seksi C dari 3 · 6 dimensi beban kerja</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="instr-box">
+        Nilai beban kerja Anda <strong>selama giliran jaga terakhir</strong> pada setiap dimensi di bawah ini. Geser slider ke nilai yang paling sesuai dengan pengalaman Anda (0 = sangat rendah, 100 = sangat tinggi).
+      </div>
+      <div id="nasa-container"></div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE 5: DONE -->
+<div class="page" id="page5">
+  <div class="done-page">
+    <div class="done-icon">✅</div>
+    <div class="done-title">Terima Kasih!</div>
+    <div class="done-sub">Jawaban Anda telah berhasil disimpan dan akan berkontribusi pada penelitian keselamatan maritim Indonesia.</div>
+    <div class="score-grid" id="done-scores"></div>
+    <div class="info-strip" style="max-width:420px;margin:0 auto 1.5rem;text-align:left">
+      <strong>Catatan untuk Anda:</strong> Jika skor ESS Anda ≥ 11, disarankan untuk berkonsultasi dengan dokter atau atasan mengenai kualitas tidur Anda.
+    </div>
+    <button class="btn btn-success" onclick="window.location.reload()">Responden Baru →</button>
+  </div>
+</div>
+
+<div class="nav-bar" id="navBar">
+  <button class="btn" id="btnBack" onclick="goPage(-1)" style="display:none">← Kembali</button>
+  <span></span>
+  <button class="btn btn-primary" id="btnNext" onclick="goPage(1)">Lanjut →</button>
+</div>
+
+<script>
+const ESS_Q = [
+  "Duduk santai membaca (buku, koran, atau majalah)",
+  "Menonton televisi",
+  "Duduk tidak aktif di tempat umum (misalnya, di ruang tunggu atau rapat)",
+  "Sebagai penumpang dalam kendaraan selama 1 jam tanpa berhenti",
+  "Berbaring untuk beristirahat di siang hari saat ada kesempatan",
+  "Duduk dan berbicara dengan seseorang",
+  "Duduk tenang setelah makan siang (tanpa mengonsumsi alkohol)",
+  "Dalam kendaraan, saat berhenti beberapa menit karena macet atau lampu merah"
+];
+
+const SOFI_DIMS = [
+  {
+    name: "Dimensi 1 – Kurang Energi",
+    items: ["Merasa kelelahan (exhausted)", "Merasa lesu (listless)", "Merasa kekurangan energi", "Merasa kurang tenaga (lacking energy)"]
+  },
+  {
+    name: "Dimensi 2 – Kelelahan Fisik",
+    items: ["Tubuh terasa berat saat bergerak", "Otot-otot tubuh terasa lelah", "Merasa pegal-pegal di sekujur tubuh", "Tubuh terasa sakit dan nyeri"]
+  },
+  {
+    name: "Dimensi 3 – Penurunan Motivasi",
+    items: ["Merasa tidak tertarik dengan pekerjaan", "Kehilangan semangat untuk bekerja", "Merasa tidak peduli dengan tugas yang ada", "Merasa enggan melakukan apa pun"]
+  },
+  {
+    name: "Dimensi 4 – Kantuk",
+    items: ["Merasa sangat mengantuk", "Merasa ingin tidur saat bertugas", "Sulit untuk tetap terjaga dan waspada", "Mata terasa berat dan sulit dibuka"]
+  },
+  {
+    name: "Dimensi 5 – Kelelahan Mental / Kognitif",
+    items: ["Sulit berkonsentrasi pada tugas", "Sulit berpikir dengan jernih", "Pikiran terasa lambat dalam memproses informasi", "Mengalami kesulitan untuk tetap fokus"]
+  }
+];
+
+const NASA_DIMS = [
+  {
+    dim: "Tuntutan Mental",
+    desc: "Seberapa besar aktivitas mental dan perseptual yang dibutuhkan (berpikir, memutuskan, menghitung, mengingat, melihat, mencari)? Apakah tugas itu mudah atau sulit, sederhana atau kompleks?"
+  },
+  {
+    dim: "Tuntutan Fisik",
+    desc: "Seberapa besar aktivitas fisik yang dibutuhkan (mendorong, menarik, memutar, mengontrol, mengaktifkan, dll.)? Apakah tugas itu mudah atau berat, lambat atau cepat, rileks atau melelahkan?"
+  },
+  {
+    dim: "Tuntutan Temporal (Waktu)",
+    desc: "Seberapa tertekan Anda karena kecepatan atau ritme tugas yang ada? Apakah pekerjaan terasa lambat dan santai atau cepat dan mepet?"
+  },
+  {
+    dim: "Performa (Kinerja Sendiri)",
+    desc: "Seberapa sukses Anda dalam mencapai tujuan tugas yang ditetapkan? Seberapa puas Anda terhadap kinerja Anda sendiri?"
+  },
+  {
+    dim: "Upaya (Effort)",
+    desc: "Seberapa keras Anda harus bekerja (secara mental maupun fisik) untuk mencapai tingkat kinerja Anda?"
+  },
+  {
+    dim: "Frustrasi",
+    desc: "Seberapa tidak aman, tertekan, mudah tersinggung, stres, dan menjengkelkan kondisi Anda selama bertugas, dibandingkan perasaan aman, puas, nyaman, dan rileks?"
+  }
+];
+
+let currentPage = 1;
+let essAnswers = {};
+let sofiAnswers = {};
+let nasaAnswers = {};
+let totalPages = 5;
+
+// Build ESS
+function buildESS() {
+  const c = document.getElementById('ess-container');
+  let h = '';
+  ESS_Q.forEach((q, i) => {
+    h += `<div class="q-row">
+      <div class="q-num">PERTANYAAN ${i+1}</div>
+      <div class="q-text">${q}</div>
+      <div class="q-options" id="ess-opt-${i}">
+        <button class="opt-btn" onclick="selESS(${i},0,this)">0</button>
+        <button class="opt-btn" onclick="selESS(${i},1,this)">1</button>
+        <button class="opt-btn" onclick="selESS(${i},2,this)">2</button>
+        <button class="opt-btn" onclick="selESS(${i},3,this)">3</button>
+      </div>
+      <div class="opt-label">0 = Tidak pernah &nbsp;·&nbsp; 3 = Sangat mungkin tertidur</div>
+    </div>`;
+  });
+  c.innerHTML = h;
+}
+
+function selESS(idx, val, btn) {
+  essAnswers[idx] = val;
+  document.querySelectorAll(`#ess-opt-${idx} .opt-btn`).forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+}
+
+// Build SOFI
+function buildSOFI() {
+  const c = document.getElementById('sofi-container');
+  let h = '';
+  let n = 0;
+  SOFI_DIMS.forEach(dim => {
+    h += `<div class="sofi-dim-head">${dim.name}</div>`;
+    dim.items.forEach((item, j) => {
+      const idx = n;
+      h += `<div class="q-row">
+        <div class="q-text">${item}</div>
+        <div class="q-options" id="sofi-opt-${idx}">
+          <button class="opt-btn" onclick="selSOFI(${idx},0,this)">0</button>
+          <button class="opt-btn" onclick="selSOFI(${idx},1,this)">1</button>
+          <button class="opt-btn" onclick="selSOFI(${idx},2,this)">2</button>
+          <button class="opt-btn" onclick="selSOFI(${idx},3,this)">3</button>
+          <button class="opt-btn" onclick="selSOFI(${idx},4,this)">4</button>
+        </div>
+      </div>`;
+      n++;
+    });
+  });
+  c.innerHTML = h;
+}
+
+function selSOFI(idx, val, btn) {
+  sofiAnswers[idx] = val;
+  document.querySelectorAll(`#sofi-opt-${idx} .opt-btn`).forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+}
+
+// Build NASA-TLX
+function buildNASA() {
+  const c = document.getElementById('nasa-container');
+  let h = '';
+  NASA_DIMS.forEach((d, i) => {
+    nasaAnswers[i] = 50;
+    h += `<div class="nasa-row">
+      <div class="nasa-label-row">
+        <div class="nasa-dim">${i+1}. ${d.dim}</div>
+        <div class="nasa-val-badge" id="nasa-v${i}">50</div>
+      </div>
+      <div class="nasa-desc">${d.desc}</div>
+      <input type="range" min="0" max="100" value="50" step="5" id="nasa-r${i}"
+        oninput="nasaChange(${i},this.value)">
+      <div class="nasa-scale-labels"><span>Sangat Rendah (0)</span><span>Sangat Tinggi (100)</span></div>
+    </div>`;
+  });
+  c.innerHTML = h;
+}
+
+function nasaChange(i, v) {
+  nasaAnswers[i] = +v;
+  document.getElementById('nasa-v'+i).textContent = v;
+}
+
+// Consent interaction
+document.getElementById('consent').addEventListener('change', function() {
+  const card = document.getElementById('demog-card');
+  card.style.opacity = this.checked ? '1' : '0.4';
+  card.style.pointerEvents = this.checked ? 'auto' : 'none';
+});
+
+function validatePage(p) {
+  if (p === 1) {
+    if (!document.getElementById('consent').checked) {
+      alert('Mohon centang persetujuan terlebih dahulu.');
+      return false;
+    }
+    const fields = ['d-jabatan','d-exp','d-usia','d-kapal','d-rute','d-durasi','d-cuaca','d-jaga'];
+    let ok = true;
+    fields.forEach(id => {
+      const el = document.getElementById(id);
+      const wrap = el.closest('.field');
+      if (!el.value) {
+        wrap.classList.add('error');
+        ok = false;
+      } else {
+        wrap.classList.remove('error');
+      }
+    });
+    if (!ok) { alert('Mohon lengkapi semua kolom yang bertanda bintang (*).'); return false; }
+    return true;
+  }
+  if (p === 2) {
+    if (Object.keys(essAnswers).length < 8) {
+      alert('Mohon jawab semua 8 pertanyaan ESS.'); return false;
+    }
+    return true;
+  }
+  if (p === 3) {
+    if (Object.keys(sofiAnswers).length < 20) {
+      alert('Mohon jawab semua 20 pertanyaan SOFI.'); return false;
+    }
+    return true;
+  }
+  return true;
+}
+
+function updateProgress(p) {
+  for (let i = 1; i <= 5; i++) {
+    const dot = document.getElementById('dot'+i);
+    const line = document.getElementById('line'+i);
+    if (!dot) continue;
+    if (i < p) { dot.classList.add('done'); dot.classList.remove('active'); dot.textContent = '✓'; }
+    else if (i === p) { dot.classList.add('active'); dot.classList.remove('done'); dot.textContent = i; }
+    else { dot.classList.remove('active','done'); dot.textContent = i === 5 ? '✓' : i; }
+    if (line) line.classList.toggle('done', i < p);
+  }
+  const labels = ['Persetujuan & Data Diri','ESS – Kantuk','SOFI – Kelelahan Kerja','NASA-TLX – Beban Kerja','Selesai'];
+  document.getElementById('stepLabel').textContent = p <= 4 ? `Langkah ${p} dari 4: ${labels[p-1]}` : labels[4];
+  document.getElementById('stepPct').textContent = Math.round(((p-1)/4)*100)+'%';
+  document.getElementById('btnBack').style.display = (p > 1 && p < 5) ? 'block' : 'none';
+  document.getElementById('btnNext').style.display = p < 5 ? 'block' : 'none';
+  document.getElementById('btnNext').textContent = p === 4 ? 'Kirim Jawaban ✓' : 'Lanjut →';
+  document.getElementById('btnNext').className = p === 4 ? 'btn btn-success' : 'btn btn-primary';
+}
+
+function goPage(dir) {
+  if (dir === 1 && !validatePage(currentPage)) return;
+  if (dir === 1 && currentPage === 4) { submitAll(); return; }
+  currentPage += dir;
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page'+currentPage).classList.add('active');
+  updateProgress(currentPage);
+  window.scrollTo(0, 0);
+}
+
+function submitAll() {
+  const essTotal = Object.values(essAnswers).reduce((a,b)=>a+b,0);
+  const sofiTotal = Object.values(sofiAnswers).reduce((a,b)=>a+b,0);
+  const nasaTotal = (Object.values(nasaAnswers).reduce((a,b)=>a+b,0)/6).toFixed(1);
+  const essStatus = essTotal <= 10 ? {t:'Normal', cls:'status-ok'} : essTotal <= 15 ? {t:'Kantuk Sedang', cls:'status-warn'} : {t:'Kantuk Berlebih', cls:'status-bad'};
+  const sofiStatus = sofiTotal <= 30 ? {t:'Rendah', cls:'status-ok'} : sofiTotal <= 50 ? {t:'Sedang', cls:'status-warn'} : {t:'Tinggi', cls:'status-bad'};
+  const nasaStatus = +nasaTotal <= 40 ? {t:'Ringan', cls:'status-ok'} : +nasaTotal <= 60 ? {t:'Sedang', cls:'status-warn'} : {t:'Berat', cls:'status-bad'};
+
+  const nasaLabels = ['Mental','Fisik','Temporal','Performa','Upaya','Frustrasi'];
+
+  const record = {
+    timestamp: new Date().toISOString(),
+    jabatan: document.getElementById('d-jabatan').value,
+    pengalaman: document.getElementById('d-exp').value,
+    usia: document.getElementById('d-usia').value,
+    jenis_kapal: document.getElementById('d-kapal').value,
+    rute: document.getElementById('d-rute').value,
+    durasi_pelayaran: document.getElementById('d-durasi').value,
+    cuaca: document.getElementById('d-cuaca').value,
+    jadwal_jaga: document.getElementById('d-jaga').value,
+    jam_istirahat: document.getElementById('d-istirahat').value,
+    ess_total: essTotal,
+    sofi_total: sofiTotal,
+    nasa_avg: +nasaTotal,
+    ess_detail: {...essAnswers},
+    sofi_detail: {...sofiAnswers},
+    nasa_detail: {...nasaAnswers}
+  };
+
+  // Save to localStorage for local use
+  const all = JSON.parse(localStorage.getItem('mif_data') || '[]');
+  all.push(record);
+  localStorage.setItem('mif_data', JSON.stringify(all));
+
+  document.getElementById('done-scores').innerHTML = `
+    <div class="score-card">
+      <div class="score-val" style="color:${essStatus.cls==='status-ok'?'#0E7C6B':essStatus.cls==='status-warn'?'#C47A1B':'#B83232'}">${essTotal}</div>
+      <div class="score-lbl">Skor ESS<br>(maks. 24)</div>
+      <div class="score-status ${essStatus.cls}">${essStatus.t}</div>
+    </div>
+    <div class="score-card">
+      <div class="score-val" style="color:${sofiStatus.cls==='status-ok'?'#0E7C6B':sofiStatus.cls==='status-warn'?'#C47A1B':'#B83232'}">${sofiTotal}</div>
+      <div class="score-lbl">Skor SOFI<br>(maks. 80)</div>
+      <div class="score-status ${sofiStatus.cls}">${sofiStatus.t}</div>
+    </div>
+    <div class="score-card">
+      <div class="score-val" style="color:${nasaStatus.cls==='status-ok'?'#0E7C6B':nasaStatus.cls==='status-warn'?'#C47A1B':'#B83232'}">${nasaTotal}</div>
+      <div class="score-lbl">NASA-TLX<br>(rata-rata)</div>
+      <div class="score-status ${nasaStatus.cls}">${nasaStatus.t}</div>
+    </div>`;
+
+  currentPage = 5;
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page5').classList.add('active');
+  updateProgress(5);
+  window.scrollTo(0,0);
+}
+
+// Init
+buildESS();
+buildSOFI();
+buildNASA();
+updateProgress(1);
+</script>
+</body>
+</html>
